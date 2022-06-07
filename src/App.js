@@ -1,23 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
+import axios from "axios";
+import {useState, useEffect} from "react";
+const App = () => {
 
-function App() {
+  const [data, setData] = useState();
+
+  const apiCalling = async () =>{
+    const options = {
+      method:"GET",
+      url:`${process.env.REACT_APP_STRAPI_URL}/api/about`
+    }
+    const res = await axios.request(options);
+    setData(res.data.data.attributes.Title);
+    console.log(res.data.data.attributes.Title)
+
+  }
+
+  useEffect(() =>{
+    apiCalling();
+  },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>React Strapi example</h1>
+      {data ? (<p>Response from API: <em><strong>{data}</strong></em> </p>):"Yet to recieve"}
     </div>
   );
 }
